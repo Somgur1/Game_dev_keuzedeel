@@ -9,13 +9,14 @@ public class PlayerController : MonoBehaviour
 
     // Create public variables for player speed, and for the Text UI game objects
     public float speed = 5.0f;
+    public float jumpSpeed = 500f;
     public TextMeshProUGUI countText;
     public GameObject winTextObject;
 
     public Transform orientation;
 
     public float jumpforce = 10f;
-    public bool isGrounded;
+    bool canJump;
     Vector3 moveDirection;
     public float horizontalSpeed = 2.0F;
 
@@ -38,9 +39,20 @@ public class PlayerController : MonoBehaviour
         winTextObject.SetActive(false);
     }
 
-    void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision other)
     {
-        isGrounded = true;
+        if (other.gameObject.tag == "Floor")
+        {
+            canJump = true;
+        }
+    }
+
+    private void OnCollisionExit(Collision other)
+    {
+        if (other.gameObject.tag == "Floor")
+        {
+            canJump = false;
+        }
     }
 
     void Update()
@@ -54,10 +66,9 @@ public class PlayerController : MonoBehaviour
         rb.AddForce(moveDirection.normalized * speed, ForceMode.Force);
         //rb.AddForce(movement * speed, ForceMode.Force);
 
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded == true)
+        if (Input.GetKey(KeyCode.Space) & canJump)
         {
-            rb.AddForce(Vector3.up * jumpforce, ForceMode.Impulse);
-            isGrounded = false;
+            rb.AddForce(0f, jumpSpeed * Time.deltaTime, 0f);
         }
     }
 
