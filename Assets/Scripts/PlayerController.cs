@@ -68,7 +68,6 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Space) & canJump)
         {
-            Console.WriteLine("Jump");
             rb.AddForce(0f, jumpSpeed * Time.deltaTime, 0f);
         }
     }
